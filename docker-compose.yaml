@@ -1,0 +1,40 @@
+# docker-compose -f docker-compose.yaml <command>
+# Access http://localhost:4180 to initiate a login cycle
+version: '3.0'
+services:
+  oauth2-proxy:
+    container_name: oauth2-proxy
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.4.0
+    command: --config /oauth2-proxy.cfg
+    ports:
+      - 4180:4180/tcp
+    hostname: oauth2-proxy
+    volumes:
+      - "./oauth2-proxy.cfg:/oauth2-proxy.cfg"
+    restart: unless-stopped
+    networks:      
+      nodeweb-app: {}
+      redis: {}
+    depends_on:      
+      - notesannotation-app
+      - redis
+  nodeweb-app:
+    container_name: nodeweb-app
+    image: nodeweb:app
+    ports:
+      - 3000:3000/tcp
+    hostname: nodeweb-app
+    networks:
+      nodeweb-app: {}  
+  redis:
+    image: redis:7.0.2-alpine3.16
+    volumes:
+      - cache:/data
+    networks:
+      redis: {}
+volumes:
+  cache:
+    driver: local
+networks:
+  nodeweb-app: {}
+  redis: {}

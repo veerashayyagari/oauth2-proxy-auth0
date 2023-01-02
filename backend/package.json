@@ -1,8 +1,8 @@
 {
   "name": "backend",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Backend NestJS implementation for Oauth2 proxy sample",
+  "author": "Veerash Ayyagari",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -24,6 +24,7 @@
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
+    "hbs": "^4.2.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
