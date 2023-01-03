@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { RouterModule } from '@nestjs/core';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { GreetingModule } from './greeting/greeting.module';
 
 @Module({
@@ -14,7 +12,7 @@ import { GreetingModule } from './greeting/greeting.module';
       },
     ]),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
