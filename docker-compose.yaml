@@ -1,11 +1,18 @@
-# docker-compose -f docker-compose.yaml <command>
+# OAUTH2_PROXY_OIDC_ISSUER_URL='https://<auth0 domain name>/' OAUTH2_PROXY_CLIENT_ID='auth0 clientid' OAUTH2_PROXY_CLIENT_SECRET='auth0 client secret' docker-compose -f docker-compose.yaml up
 # Access http://localhost:4180 to initiate a login cycle
+# Once you are done validating, use 
+# docker compose -f docker-compose.yaml down
+# to bring the cluster down
 version: '3.0'
 services:
   oauth2-proxy:
     container_name: oauth2-proxy
     image: quay.io/oauth2-proxy/oauth2-proxy:v7.4.0
     command: --config /oauth2-proxy.cfg
+    environment:
+      - OAUTH2_PROXY_OIDC_ISSUER_URL
+      - OAUTH2_PROXY_CLIENT_ID
+      - OAUTH2_PROXY_CLIENT_SECRET
     ports:
       - 4180:4180/tcp
     hostname: oauth2-proxy
@@ -16,7 +23,7 @@ services:
       nodeweb-app: {}
       redis: {}
     depends_on:      
-      - notesannotation-app
+      - nodeweb-app
       - redis
   nodeweb-app:
     container_name: nodeweb-app
