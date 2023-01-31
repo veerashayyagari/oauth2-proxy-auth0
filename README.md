@@ -33,9 +33,9 @@ Working example for integrating OAuth2-Proxy with Auth0
 
 ![Logout Workflow](./images/logout_workflow.png)
 
-1. Redirect to user to `<hostname>/oauth2/sign_out` endpoint (exposed by OAuth2-Proxy), with a redirect url in the query string
+1. Redirect user to `<hostname>/oauth2/sign_out` endpoint (exposed by OAuth2-Proxy), with a redirect url in the query string
 2. Any requests made to `oauth2/sign_out` endpoint will
-    a. delete the session stored in the store
+    a. delete the session persisted in the store
     b. if a redirect url is provided in the query string (should be html encoded) , OAuth2-Proxy will redirect the user to that redirect url as long as the hostname of the redirect is in whitelist domains configured on OAuth2-Proxy.
 
     ```
@@ -54,4 +54,4 @@ Working example for integrating OAuth2-Proxy with Auth0
 - The user doesn't directly browse to the OAuth2-Proxy hosted url, in fact we don't configure any backend app for OAuth2-Proxy.
 - The OAuth2-Proxy ingress is configured to take any requests that has oauth2 in their request uri
 - The Protected App Ingress is configured to take every other request.
-- On the protected app ingress, these annotations `nginx.ingress.kubernetes.io/auth-signin` and `nginx.ingress.kubernetes.io/auth-url` are configured with '<hostname>/oauth2/start' and '<hostname>/oauth2/auth' urls respectively. These annotations will ensure, any unauthenticated request has to be redirected to OAuth2-Proxy ingress for authentication.
+- On the protected app ingress, these annotations `nginx.ingress.kubernetes.io/auth-signin` and `nginx.ingress.kubernetes.io/auth-url` are configured with 'hostname/oauth2/start' and 'hostname/oauth2/auth' urls respectively. These annotations will ensure, any unauthenticated request has to be redirected to OAuth2-Proxy ingress for authentication.
