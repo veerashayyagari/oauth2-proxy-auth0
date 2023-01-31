@@ -24,7 +24,7 @@ RUN npm run build
 
 RUN rm -rf public && mkdir public
 
-FROM gcr.io/distroless/nodejs16-debian11
+FROM gcr.io/distroless/nodejs16-debian11 AS release
 
 COPY --from=build-env-be /be-app/dist /app/dist
 
