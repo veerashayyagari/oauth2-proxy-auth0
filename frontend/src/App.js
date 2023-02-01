@@ -11,11 +11,16 @@ function App() {
       .then((d) => setMessage(d));
   }, []);
 
+  const onLogoutClick = () =>
+    // eslint-disable-next-line no-restricted-globals
+    (location.href = process.env.REACT_APP_LOGOUT_URL);
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>{message}</p>
+        <button onClick={() => onLogoutClick()}>Logout</button>
       </header>
     </div>
   );
