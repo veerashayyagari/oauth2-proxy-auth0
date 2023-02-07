@@ -25,7 +25,9 @@ services:
       - redis
   nodeweb-app:
     container_name: nodeweb-app
-    image: nodeweb:app
+    image: veerash/oauth2-proxy-sample:nodeweb-app
+    env_file:
+      - oauth2-proxy.env
     ports:
       - 3000:3000/tcp
     hostname: nodeweb-app    

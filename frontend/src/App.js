@@ -13,7 +13,7 @@ function App() {
 
   const onLogoutClick = () =>
     // eslint-disable-next-line no-restricted-globals
-    (location.href = process.env.REACT_APP_LOGOUT_URL);
+    (location.href = "/app/logout");
 
   return (
     <div className="App">
