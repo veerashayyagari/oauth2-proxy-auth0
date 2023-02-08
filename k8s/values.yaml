@@ -1,0 +1,112 @@
+oauth2-proxy:
+  nameOverride: oauth2-proxy-sample
+  ingress:
+    enabled: true
+    hosts:
+      - oauth2-proxy.localtest.me
+    annotations:
+      nginx.ingress.kubernetes.io/server-snippet: |
+        large_client_header_buffers 4 32k;
+  # pick up client_id and client_secret from configFile as opposed to helm .Values.config.clientID and .Values.config.clientSecret
+  proxyVarsAsSecrets: false
+  config:
+    configFile: |-
+      cookie_secret="OQINaROshtE9TcZkNAm-5Zs2Pv3xaWytBmc5W7sPX7w="
+      cookie_domains=".localtest.me"
+      whitelist_domains=[".localtest.me",".us.auth0.com"]
+      # only users with this domain will be let in
+      email_domains=["example.com"]
+
+      client_id="F1g0MFaIlFzzCjpagGIzmR5BQVlwgS7y"
+      client_secret="secret"
+      cookie_secure="false"      
+
+      # we don't want to proxy anything so pick a non-existent directory
+      upstreams = [ "file:///dev/null" ]
+
+      # return authenticated user to nginx
+      set_xauthrequest = true
+      # using http://dex.localtest.me/.well-known/openid-configuration oauth2-proxy will populate
+      # login_url, redeem_url, and oidc_jwks_url
+      provider="oidc"
+      oidc_issuer_url="https://<domain>.us.auth0.com/"
+
+httpbin2022:
+  ingress:
+    enabled: true
+    hosts:
+      - host: httpbin.localtest.me
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    annotations:
+      nginx.ingress.kubernetes.io/auth-signin: http://oauth2-proxy.localtest.me/oauth2/start
+      # That's what will be used in REAL LIFE
+      #nginx.ingress.kubernetes.io/auth-url: http://oauth2-proxy.localtest.me/oauth2/auth
+      # but because of https://github.com/kubernetes/ingress-nginx/issues/3665
+      nginx.ingress.kubernetes.io/auth-url: http://oauth2-proxy-example-oauth2-proxy-sample.default.svc.cluster.local/oauth2/auth
+      nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email
+
+replicaCount: 1
+
+image:
+  repository: veerash/oauth2-proxy-sample
+  pullPolicy: Always
+  tag: "nodeweb-app"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+extraEnv:
+  - name: AUTH_PROXY_ENDPOINT
+    value: http://oauth2-proxy.localtest.me
+  - name: RETURN_URL
+    value: http://nodeweb-app.localtest.me
+  - name: OAUTH2_PROXY_CLIENT_ID
+    value: "F1g0MFaIlFzzCjpagGIzmR5BQVlwgS7y"
+  - name: OAUTH2_PROXY_OIDC_ISSUER_URL
+    value: "https://<domain>.us.auth0.com/"
+
+podSecurityContext: {}
+
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 3000
+
+ingress:
+  enabled: true
+  className: ""
+  annotations:
+    nginx.ingress.kubernetes.io/auth-signin: http://oauth2-proxy.localtest.me/oauth2/start
+    nginx.ingress.kubernetes.io/auth-url: http://oauth2-proxy-example-oauth2-proxy-sample.default.svc.cluster.local/oauth2/auth
+    nginx.ingress.kubernetes.io/auth-response-headers: X-Auth-Request-User,X-Auth-Request-Email
+
+  hosts:
+    - host: nodeweb-app.localtest.me
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

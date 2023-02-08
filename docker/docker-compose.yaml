@@ -1,7 +1,8 @@
-# OAUTH2_PROXY_OIDC_ISSUER_URL='https://<auth0 domain name>/' OAUTH2_PROXY_CLIENT_ID='auth0 clientid' OAUTH2_PROXY_CLIENT_SECRET='auth0 client secret' docker-compose -f docker-compose.yaml up
+# Update OAUTH2_PROXY_OIDC_ISSUER_URL='https://<auth0 domain name>/' OAUTH2_PROXY_CLIENT_ID='auth0 clientid' OAUTH2_PROXY_CLIENT_SECRET='auth0 client secret' in oauth2-proxy.cfg
+# make compose-up
 # Access http://localhost:4180 to initiate a login cycle
 # Once you are done validating, use 
-# docker compose -f docker-compose.yaml down
+# make compose-down
 # to bring the cluster down
 version: '3.0'
 services:
